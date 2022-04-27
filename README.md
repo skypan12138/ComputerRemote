@@ -6,7 +6,9 @@
 >
 >视频介绍：[DIY电脑遥控器，把电脑变成电视！_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV17F411u7rH?spm_id_from=333.999.0.0)
 
-![image-20220427225431774](F:\2_电脑备份\Document\CodeForGithub\ComputerRemote\5.Docs\Image\Display.png)
+![Display.png](https://github.com/skypan12138/ComputerRemote/blob/main/5.Docs/Image/Display.png?raw=true)
+
+
 
 
 
