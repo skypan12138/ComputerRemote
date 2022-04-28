@@ -21,15 +21,13 @@ MainWindow::MainWindow(QWidget *parent) :
     this->serialPort = new QSerialPort;
     findFreePorts();
 
-    // 设置背景图片为bj.jpg
+    // Set background picture as bj.jpg
     this->setObjectName("MainWindow");
     this->setStyleSheet("MainWindow{border-image:url(:/Image/background.png);}");
 
-
-    //自动打开串口
+    //Automatically open serial port
     initSerialPort();
     ui->btnSend->setEnabled(true);
-
     connect(ui->openCom, &QCheckBox::toggled, [=](bool checked){
         if (checked){
             initSerialPort();
@@ -80,9 +78,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(tray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
-    //==================================================================================
+    //The initializtion is minimal,and it is automatically hidden when computer is turned on.
     setWindowState(Qt::WindowMinimized);
-
 
 }
 
@@ -91,7 +88,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-//寻找空闲状态串口
+//Find free serial port
 void MainWindow::findFreePorts(){
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     for (int i = 0; i < ports.size(); ++i){
@@ -106,7 +103,6 @@ void MainWindow::findFreePorts(){
         return;
     }
 }
-
 
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason ireason)
@@ -146,7 +142,7 @@ void MainWindow::hideEvent(QHideEvent *event)
 
 
 
-//初始化串口
+//initialize the serial port
 bool MainWindow::initSerialPort(){
     this->serialPort->setPortName(ui->portName->currentText());
     if (!this->serialPort->open(QIODevice::ReadWrite)){
@@ -193,20 +189,24 @@ void MainWindow::recvMsg(){
     ui->comLog->insertPlainText(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + " [recieve] " + msg.data() + "\n");
 
     qDebug() << "revieve :"<< msg.data();
-
+    //Only determine the first received character
     char *data=msg.data();
     qDebug() <<"1:"<<data[0]<<"2:"<<data[1]<<"3:"<<data[2]<<"4:"<<data[3];
+
+
+    //===============================判断接受到哪个字符，然后模拟相关快捷键发送给AHK===============================
+    //Key Code ref from https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+    //Always like ctrl + alt + LETTER
     if(data[0] == 'W'){
          qDebug() << "successfully recieve!!";
 
          //按下
-
          keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
          keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-         keybd_event(0x57,0,0,0);//模拟tab键被按下
+         keybd_event(0x57,0,0,0);
 
          //弹起
-         keybd_event(0x57,0,2,0);//模拟tab键被抬起
+         keybd_event(0x57,0,2,0);
          keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
          keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
          ui->comLog->insertPlainText(" Successfully Open WeChat \n");
@@ -216,13 +216,12 @@ void MainWindow::recvMsg(){
          qDebug() << "successfully recieve!!";
 
          //按下
-
          keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
          keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-         keybd_event(0x4f,0,0,0);//模拟tab键被按下
+         keybd_event(0x4f,0,0,0);
 
          //弹起
-         keybd_event(0x4f,0,2,0);//模拟tab键被抬起
+         keybd_event(0x4f,0,2,0);
          keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
          keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
          ui->comLog->insertPlainText(" Successfully Open OneNote \n");
@@ -232,13 +231,12 @@ void MainWindow::recvMsg(){
          qDebug() << "successfully recieve!!";
 
          //按下
-
          keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
          keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-         keybd_event(0x42,0,0,0);//模拟tab键被按下
+         keybd_event(0x42,0,0,0);
 
          //弹起
-         keybd_event(0x42,0,2,0);//模拟tab键被抬起
+         keybd_event(0x42,0,2,0);
          keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
          keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
          ui->comLog->insertPlainText(" Successfully Open Bilibili \n");
@@ -248,13 +246,12 @@ void MainWindow::recvMsg(){
          qDebug() << "successfully recieve!!";
 
          //按下
-
          keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
          keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-         keybd_event(0x4c,0,0,0);//模拟tab键被按下
+         keybd_event(0x4c,0,0,0);
 
          //弹起
-         keybd_event(0x4c,0,2,0);//模拟tab键被抬起
+         keybd_event(0x4c,0,2,0);
          keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
          keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
          ui->comLog->insertPlainText(" Successfully Open Leetcode \n");
@@ -264,13 +261,12 @@ void MainWindow::recvMsg(){
         qDebug() << "successfully recieve!!";
 
         //按下
-
         keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
         keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-        keybd_event(0x4d,0,0,0);//模拟tab键被按下
+        keybd_event(0x4d,0,0,0);
 
         //弹起
-        keybd_event(0x4d,0,2,0);//模拟tab键被抬起
+        keybd_event(0x4d,0,2,0);
         keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
         keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
         ui->comLog->insertPlainText(" Successfully Open Music \n");
@@ -280,13 +276,12 @@ void MainWindow::recvMsg(){
         qDebug() << "successfully recieve!!";
 
         //按下
-
         keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
         keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-        keybd_event(0x47,0,0,0);//模拟tab键被按下
+        keybd_event(0x47,0,0,0);
 
         //弹起
-        keybd_event(0x47,0,2,0);//模拟tab键被抬起
+        keybd_event(0x47,0,2,0);
         keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
         keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
         ui->comLog->insertPlainText(" Successfully Open Music \n");
@@ -296,13 +291,12 @@ void MainWindow::recvMsg(){
         qDebug() << "successfully recieve!!";
 
         //按下
-
         keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
         keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-        keybd_event(0x5a,0,0,0);//模拟tab键被按下
+        keybd_event(0x5a,0,0,0);
 
         //弹起
-        keybd_event(0x5a,0,2,0);//模拟tab键被抬起
+        keybd_event(0x5a,0,2,0);
         keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
         keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
         ui->comLog->insertPlainText(" Successfully Mute \n");
@@ -312,13 +306,12 @@ void MainWindow::recvMsg(){
         qDebug() << "successfully recieve!!";
 
         //按下
-
         keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
         keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-        keybd_event(0x55,0,0,0);//模拟tab键被按下
+        keybd_event(0x55,0,0,0);
 
         //弹起
-        keybd_event(0x55,0,2,0);//模拟tab键被抬起
+        keybd_event(0x55,0,2,0);
         keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
         keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
         ui->comLog->insertPlainText(" Successfully Up Vol \n");
@@ -328,13 +321,12 @@ void MainWindow::recvMsg(){
         qDebug() << "successfully recieve!!";
 
         //按下
-
         keybd_event(VK_CONTROL,0,0,0);//模拟ctrl按键按下
         keybd_event(VK_MENU,0,0,0); //模拟alt按键按下
-        keybd_event(0x44,0,0,0);//模拟tab键被按下
+        keybd_event(0x44,0,0,0);
 
         //弹起
-        keybd_event(0x44,0,2,0);//模拟tab键被抬起
+        keybd_event(0x44,0,2,0);
         keybd_event(VK_MENU,0,2,0); //模拟alt按键抬起
         keybd_event(VK_CONTROL,0,2,0); //模拟ctrl按键抬起
         ui->comLog->insertPlainText(" Successfully Down Vol \n");
@@ -344,8 +336,6 @@ void MainWindow::recvMsg(){
         qDebug() << "successfully recieve!!";
 
         //按下
-
-
         keybd_event(0x20,0,0,0);//模拟tab键被按下
 
         //弹起
